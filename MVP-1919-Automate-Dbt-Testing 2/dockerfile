@@ -1,0 +1,23 @@
+FROM python:3.8
+WORKDIR /home/automate_dbt_dir
+
+RUN pip3 install subprocess.run
+RUN pip3 install PyYAML==5.3.1
+RUN apt-get upgrade -y && \
+   apt-get install -y git
+  
+RUN pip3 install dbt==0.19.1
+
+
+USER root
+RUN mkdir .dbt
+
+RUN chmod 777 .dbt
+# COPY profiles.yml ./.dbt/profiles.yml
+COPY dbt_project.yml ./.dbt/dbt_project.yml
+# RUN chmod -R 777 ./.dbt/profiles.yml
+RUN chmod -R 777 ./.dbt/dbt_project.yml
+
+COPY . .
+CMD ["python3", "automate_dbt_main.py"]
+
